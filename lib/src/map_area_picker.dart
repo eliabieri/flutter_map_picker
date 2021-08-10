@@ -430,95 +430,97 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
     return WillPopScope(
       child: Scaffold(
         key: _scaffoldKey,
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: <Widget>[
-                  GoogleMap(
-                    mapType: MapType.normal,
-                    initialCameraPosition: CameraPosition(
-                      target: centerCamera,
-                      zoom: zoomCamera,
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: <Widget>[
+                    GoogleMap(
+                      mapType: MapType.normal,
+                      initialCameraPosition: CameraPosition(
+                        target: centerCamera,
+                        zoom: zoomCamera,
+                      ),
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: false,
+                      onMapCreated: (GoogleMapController controller) {
+                        googleMapController = controller;
+                      },
+                      onTap: (latLng) {
+                        _selectCenterCircle(latLng);
+                      },
+                      onCameraMove: (position) {
+                        centerCamera = position.target;
+                        zoomCamera = position.zoom;
+                      },
+                      circles: _getCircles(),
+                      markers: _getMarkers(),
+                      polygons: _getPolygons(),
                     ),
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: false,
-                    onMapCreated: (GoogleMapController controller) {
-                      googleMapController = controller;
-                    },
-                    onTap: (latLng) {
-                      _selectCenterCircle(latLng);
-                    },
-                    onCameraMove: (position) {
-                      centerCamera = position.target;
-                      zoomCamera = position.zoom;
-                    },
-                    circles: _getCircles(),
-                    markers: _getMarkers(),
-                    polygons: _getPolygons(),
-                  ),
-                  if (!drawing) _mapButtons(),
-                  if (drawing)
-                    Draw(
-                      onDrawEnd: _onDrawPolygon,
-                    ),
-                ],
+                    if (!drawing) _mapButtons(),
+                    if (drawing)
+                      Draw(
+                        onDrawEnd: _onDrawPolygon,
+                      ),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              child: Column(
-                children: <Widget>[
-                  drawing || polygonPoints.length > 0
-                      ? _polygonEditorWidget()
-                      : _circleRadiusWidget(),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          width: 160,
-                          padding: EdgeInsets.only(right: 16),
-                          child: FlatButton(
-                            onPressed: !drawing
-                                ? () {
-                                    Navigator.pop(context);
-                                  }
-                                : null,
-                            child: Text(strings.cancel),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: !drawing ? mainColor : Colors.white)),
-                          ),
-                        ),
-                        Expanded(
-                          child: FlatButton(
-                            onPressed: !drawing
-                                ? () {
-                                    AreaPickerResult result = AreaPickerResult(
-                                        selectedLatLng, radiusInMeters, polygonPoints);
-                                    print(result);
-                                    Navigator.pop(context, result);
-                                  }
-                                : null,
-                            child: Text(
-                              strings.saveArea,
-                              style: TextStyle(color: Colors.white),
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    drawing || polygonPoints.length > 0
+                        ? _polygonEditorWidget()
+                        : _circleRadiusWidget(),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 160,
+                            padding: EdgeInsets.only(right: 16),
+                            child: FlatButton(
+                              onPressed: !drawing
+                                  ? () {
+                                      Navigator.pop(context);
+                                    }
+                                  : null,
+                              child: Text(strings.cancel),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: BorderSide(color: !drawing ? mainColor : Colors.white)),
                             ),
-                            color: mainColor,
-                            disabledColor: Colors.grey[350],
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: !drawing ? mainColor : Colors.white)),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
+                          Expanded(
+                            child: FlatButton(
+                              onPressed: !drawing
+                                  ? () {
+                                      AreaPickerResult result = AreaPickerResult(
+                                          selectedLatLng, radiusInMeters, polygonPoints);
+                                      print(result);
+                                      Navigator.pop(context, result);
+                                    }
+                                  : null,
+                              child: Text(
+                                strings.saveArea,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              color: mainColor,
+                              disabledColor: Colors.grey[350],
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: BorderSide(color: !drawing ? mainColor : Colors.white)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
       onWillPop: _onBackPressed,
