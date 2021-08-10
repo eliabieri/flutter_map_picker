@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map_picker/flutter_map_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'google_places_api_key.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,24 +28,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  static const LatLng DEFAULT_LAT_LNG = LatLng(40.416775, 	-3.703790); //Madrid
+  static const LatLng DEFAULT_LAT_LNG = LatLng(40.416775, -3.703790); //Madrid
 
   String result = '';
 
   @override
   Widget build(BuildContext context) {
-
-
-    pickArea() async{
-      AreaPickerResult pickerResult = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  AreaPickerScreen(
-        googlePlacesApiKey: GOOGLE_PLACES_API_KEY,
-        initialPosition: DEFAULT_LAT_LNG,
-        mainColor: Colors.purple,
-        mapStrings: MapPickerStrings.spanish(),
-        placeAutoCompleteLanguage: 'es',
-        markerAsset: 'assets/images/icon_look_area.png',
-      )));
+    pickArea() async {
+      AreaPickerResult pickerResult = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AreaPickerScreen(
+                    googlePlacesApiKey: "GOOGLE_PLACES_API_KEY",
+                    initialPosition: DEFAULT_LAT_LNG,
+                    mainColor: Colors.purple,
+                    mapStrings: MapPickerStrings.spanish(),
+                    placeAutoCompleteLanguage: 'es',
+                    markerAsset: 'assets/images/icon_look_area.png',
+                  )));
 
       setState(() {
         result = pickerResult.toString();
@@ -54,13 +53,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     pickPlace() async {
-      PlacePickerResult pickerResult = await Navigator.push(context, MaterialPageRoute(builder: (context) =>  PlacePickerScreen(
-        googlePlacesApiKey: GOOGLE_PLACES_API_KEY,
-        initialPosition: DEFAULT_LAT_LNG,
-        mainColor: Colors.purple,
-        mapStrings: MapPickerStrings.spanish(),
-        placeAutoCompleteLanguage: 'es',
-      )));
+      PlacePickerResult pickerResult = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PlacePickerScreen(
+                    googlePlacesApiKey: "GOOGLE_PLACES_API_KEY",
+                    initialPosition: DEFAULT_LAT_LNG,
+                    mainColor: Colors.purple,
+                    mapStrings: MapPickerStrings.spanish(),
+                    placeAutoCompleteLanguage: 'es',
+                  )));
 
       setState(() {
         result = pickerResult.toString();
@@ -68,27 +70,26 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            RaisedButton(
-              onPressed: pickArea,
-              child: Text("Pick area"),
-            ),
-            RaisedButton(
-              onPressed: pickPlace,
-              child: Text("Pick place"),
-            ),
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(result),
-            )
-          ],
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-      )
-    );
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              RaisedButton(
+                onPressed: pickArea,
+                child: Text("Pick area"),
+              ),
+              RaisedButton(
+                onPressed: pickPlace,
+                child: Text("Pick place"),
+              ),
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(result),
+              )
+            ],
+          ),
+        ));
   }
 }

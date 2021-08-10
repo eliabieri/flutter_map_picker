@@ -16,8 +16,7 @@ class AreaPickerResult {
   double radiusInMeters;
   List<LatLng> polygonPoints;
 
-  AreaPickerResult(
-      this.selectedLatLng, this.radiusInMeters, this.polygonPoints);
+  AreaPickerResult(this.selectedLatLng, this.radiusInMeters, this.polygonPoints);
 
   @override
   String toString() {
@@ -46,17 +45,7 @@ class AreaPickerScreen extends StatefulWidget {
       this.mainColor = Colors.cyan,
       @required this.googlePlacesApiKey,
       @required this.initialPosition,
-      this.distanceSteps = const [
-        1000,
-        5000,
-        10000,
-        20000,
-        40000,
-        80000,
-        160000,
-        320000,
-        640000
-      ],
+      this.distanceSteps = const [1000, 5000, 10000, 20000, 40000, 80000, 160000, 320000, 640000],
       this.zoomSteps = const [14, 12, 11, 10, 9, 8, 7, 6, 5],
       this.initialStepIndex = 1,
       this.initialPolygon = const [],
@@ -109,8 +98,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
       @required placeAutoCompleteLanguage}) {
     centerCamera = LatLng(initialPosition.latitude, initialPosition.longitude);
     zoomCamera = zoomSteps[initialStepIndex];
-    selectedLatLng =
-        LatLng(initialPosition.latitude, initialPosition.longitude);
+    selectedLatLng = LatLng(initialPosition.latitude, initialPosition.longitude);
     radiusInMeters = distanceSteps[initialStepIndex];
     polygonPoints = initialPolygon;
 
@@ -145,8 +133,8 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
 
   ///BASIC
   _moveCamera(LatLng latLng, double zoom) async {
-    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: latLng, zoom: zoom)));
+    googleMapController
+        .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: latLng, zoom: zoom)));
   }
 
   Future<$.LocationData> _getLocation() async {
@@ -161,8 +149,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
       locationData = null;
     }
 
-    if (locationData != null)
-      myLocation = LatLng(locationData.latitude, locationData.longitude);
+    if (locationData != null) myLocation = LatLng(locationData.latitude, locationData.longitude);
 
     return locationData;
   }
@@ -170,8 +157,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
   @override
   void initState() {
     if (markerAsset != null) {
-      BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(size: Size(30, 30)), markerAsset)
+      BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(30, 30)), markerAsset)
           .then((onValue) {
         setState(() {
           iconSelectedLocation = onValue;
@@ -236,28 +222,24 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
     }
 
     List<LatLng> _simplify(List<LatLng> coordinates) {
-      List<Point> points = coordinates
-          .map((latLng) => Point(latLng.latitude, latLng.longitude))
-          .toList();
+      List<Point> points =
+          coordinates.map((latLng) => Point(latLng.latitude, latLng.longitude)).toList();
       List<Point> simplifiedPoints = PolyUtils.simplify(points, 100); //todo
       return simplifiedPoints.map((p) => LatLng(p.x, p.y)).toList();
     }
 
     _onDrawPolygon(List<DrawingPoints> points) async {
-      final devicePixelRatio =
-          Platform.isAndroid ? MediaQuery.of(context).devicePixelRatio : 1.0;
+      final devicePixelRatio = Platform.isAndroid ? MediaQuery.of(context).devicePixelRatio : 1.0;
 
       Future<LatLng> _getLatLngFromScreenCoordinate(double x, double y) async {
-        ScreenCoordinate screenCoordinate = ScreenCoordinate(
-            x: (x * devicePixelRatio).round(),
-            y: (y * devicePixelRatio).round());
+        ScreenCoordinate screenCoordinate =
+            ScreenCoordinate(x: (x * devicePixelRatio).round(), y: (y * devicePixelRatio).round());
         return await googleMapController.getLatLng(screenCoordinate);
       }
 
       List<LatLng> latLngPoints = [];
       for (var p in points) {
-        var currentLatLng =
-            await _getLatLngFromScreenCoordinate(p.points.dx, p.points.dy);
+        var currentLatLng = await _getLatLngFromScreenCoordinate(p.points.dx, p.points.dy);
         latLngPoints.add(currentLatLng);
       }
 
@@ -296,8 +278,8 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 32, bottom: 16),
-              child: Text(strings.distanceInKmFromYou
-                  .replaceAll("\$", "${radiusInMeters ~/ 1000}")),
+              child:
+                  Text(strings.distanceInKmFromYou.replaceAll("\$", "${radiusInMeters ~/ 1000}")),
             )
           ],
         ),
@@ -364,21 +346,18 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
           mode: Mode.fullscreen,
           language: placeAutoCompleteLanguage,
           location: myLocation != null
-              ? Location(myLocation.latitude, myLocation.longitude)
+              ? Location(lat: myLocation.latitude, lng: myLocation.longitude)
               : null);
 
       if (p != null) {
-        PlacesDetailsResponse detail =
-            await _places.getDetailsByPlaceId(p.placeId);
+        PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
         final lat = detail.result.geometry.location.lat;
         final lng = detail.result.geometry.location.lng;
 
         double zoom = zoomSteps[distanceSteps.indexOf(radiusInMeters)];
-        CameraPosition newPosition =
-            CameraPosition(target: LatLng(lat, lng), zoom: zoom);
+        CameraPosition newPosition = CameraPosition(target: LatLng(lat, lng), zoom: zoom);
 
-        googleMapController
-            .animateCamera(CameraUpdate.newCameraPosition(newPosition));
+        googleMapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
         _selectCenterCircle(LatLng(lat, lng));
       }
     }
@@ -509,9 +488,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                             child: Text(strings.cancel),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(
-                                    color:
-                                        !drawing ? mainColor : Colors.white)),
+                                side: BorderSide(color: !drawing ? mainColor : Colors.white)),
                           ),
                         ),
                         Expanded(
@@ -519,9 +496,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                             onPressed: !drawing
                                 ? () {
                                     AreaPickerResult result = AreaPickerResult(
-                                        selectedLatLng,
-                                        radiusInMeters,
-                                        polygonPoints);
+                                        selectedLatLng, radiusInMeters, polygonPoints);
                                     print(result);
                                     Navigator.pop(context, result);
                                   }
@@ -534,9 +509,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                             disabledColor: Colors.grey[350],
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(
-                                    color:
-                                        !drawing ? mainColor : Colors.white)),
+                                side: BorderSide(color: !drawing ? mainColor : Colors.white)),
                           ),
                         ),
                       ],
@@ -547,7 +520,6 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
             )
           ],
         ),
-        resizeToAvoidBottomPadding: false,
       ),
       onWillPop: _onBackPressed,
     );
@@ -625,13 +597,11 @@ class DrawingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (int i = 0; i < pointsList.length - 1; i++) {
       if (pointsList[i] != null && pointsList[i + 1] != null) {
-        canvas.drawLine(pointsList[i].points, pointsList[i + 1].points,
-            pointsList[i].paint);
+        canvas.drawLine(pointsList[i].points, pointsList[i + 1].points, pointsList[i].paint);
       } else if (pointsList[i] != null && pointsList[i + 1] == null) {
         offsetPoints.clear();
         offsetPoints.add(pointsList[i].points);
-        offsetPoints.add(Offset(
-            pointsList[i].points.dx + 0.1, pointsList[i].points.dy + 0.1));
+        offsetPoints.add(Offset(pointsList[i].points.dx + 0.1, pointsList[i].points.dy + 0.1));
         canvas.drawPoints(PointMode.points, offsetPoints, pointsList[i].paint);
       }
     }

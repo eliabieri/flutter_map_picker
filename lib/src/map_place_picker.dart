@@ -64,8 +64,7 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
       @required placeAutoCompleteLanguage}) {
     centerCamera = LatLng(initialPosition.latitude, initialPosition.longitude);
     zoomCamera = 16;
-    selectedLatLng =
-        LatLng(initialPosition.latitude, initialPosition.longitude);
+    selectedLatLng = LatLng(initialPosition.latitude, initialPosition.longitude);
 
     _places = GoogleMapsPlaces(apiKey: googlePlacesApiKey);
 
@@ -96,8 +95,8 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
 
   ///BASIC
   _moveCamera(LatLng latLng, double zoom) async {
-    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: latLng, zoom: zoom)));
+    googleMapController
+        .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: latLng, zoom: zoom)));
   }
 
   Future<$.LocationData> _getLocation() async {
@@ -112,16 +111,14 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
       locationData = null;
     }
 
-    if (locationData != null)
-      myLocation = LatLng(locationData.latitude, locationData.longitude);
+    if (locationData != null) myLocation = LatLng(locationData.latitude, locationData.longitude);
 
     return locationData;
   }
 
   Future<Address> _reverseGeocoding(double lat, double lng) async {
     final coordinates = new Coordinates(lat, lng);
-    var addresses =
-        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     print("${first.featureName} : ${first.addressLine}");
     return first;
@@ -140,10 +137,9 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
     _searchPlace() async {
       var location;
       if (myLocation != null) {
-        location = Location(myLocation.latitude, myLocation.longitude);
+        location = Location(lat: myLocation.latitude, lng: myLocation.longitude);
       } else {
-        location =
-            Location(initialPosition.latitude, initialPosition.longitude);
+        location = Location(lat: initialPosition.latitude, lng: initialPosition.longitude);
       }
       Prediction p = await PlacesAutocomplete.show(
         context: context,
@@ -156,20 +152,17 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
 
       if (p != null) {
         // get detail (lat/lng)
-        PlacesDetailsResponse detail =
-            await _places.getDetailsByPlaceId(p.placeId);
+        PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
         final lat = detail.result.geometry.location.lat;
         final lng = detail.result.geometry.location.lng;
 
         var latLng = LatLng(lat, lng);
         var address = p.description;
 
-        CameraPosition newPosition =
-            CameraPosition(target: latLng, zoom: _defaultZoom);
+        CameraPosition newPosition = CameraPosition(target: latLng, zoom: _defaultZoom);
 
         ignoreGeocoding = true;
-        googleMapController
-            .animateCamera(CameraUpdate.newCameraPosition(newPosition));
+        googleMapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
 
         _setSelectedAddress(latLng, address);
       }
@@ -237,10 +230,8 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                     googleMapController = controller;
                   },
                   onTap: (latLng) {
-                    CameraPosition newPosition =
-                        CameraPosition(target: latLng, zoom: _defaultZoom);
-                    googleMapController.animateCamera(
-                        CameraUpdate.newCameraPosition(newPosition));
+                    CameraPosition newPosition = CameraPosition(target: latLng, zoom: _defaultZoom);
+                    googleMapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
                   },
                   onCameraMoveStarted: () {
                     setState(() {
@@ -263,9 +254,9 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                         loadingAddress = true;
                       });
 
-                      var address = (await _reverseGeocoding(
-                              centerCamera.latitude, centerCamera.longitude))
-                          .addressLine;
+                      var address =
+                          (await _reverseGeocoding(centerCamera.latitude, centerCamera.longitude))
+                              .addressLine;
                       loadingAddress = false;
 
                       _setSelectedAddress(centerCamera, address);
@@ -322,12 +313,10 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                       ),
                       Expanded(
                         child: FlatButton(
-                          onPressed: !movingCamera &&
-                                  !loadingAddress &&
-                                  selectedAddress != null
+                          onPressed: !movingCamera && !loadingAddress && selectedAddress != null
                               ? () {
-                                  PlacePickerResult result = PlacePickerResult(
-                                      selectedLatLng, selectedAddress);
+                                  PlacePickerResult result =
+                                      PlacePickerResult(selectedLatLng, selectedAddress);
                                   print(result);
 
                                   Navigator.pop(context, result);
