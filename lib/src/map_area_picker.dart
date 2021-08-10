@@ -278,8 +278,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 32, bottom: 16),
-              child:
-                  Text(strings.distanceInKmFromYou.replaceAll("\$", "${radiusInMeters ~/ 1000}")),
+              child: Text(strings.distanceInKmFromYou.replaceAll("\$", "${radiusInMeters / 1000}")),
             )
           ],
         ),
