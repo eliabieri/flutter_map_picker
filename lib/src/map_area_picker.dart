@@ -37,6 +37,7 @@ class AreaPickerScreen extends StatefulWidget {
   final bool enableFreeDraw;
 
   final String placeAutoCompleteLanguage; //es || en
+  final bool enableSearch;
   final MapPickerStrings mapStrings;
 
   AreaPickerScreen(
@@ -51,7 +52,8 @@ class AreaPickerScreen extends StatefulWidget {
       this.initialPolygon = const [],
       this.enableFreeDraw = true,
       this.mapStrings,
-      this.placeAutoCompleteLanguage})
+      this.placeAutoCompleteLanguage,
+      this.enableSearch = true})
       : super(key: key);
 
   @override
@@ -370,22 +372,24 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
     }
 
     ///WIDGETS
-    Widget _mapButtons() {
+    Widget _mapButtons(bool showSearch) {
       return Padding(
         padding: EdgeInsets.only(top: 40, left: 8, right: 8),
         child: Column(
           children: <Widget>[
-            FloatingActionButton(
-              heroTag: "FAB_SEARCH_PLACE",
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                _goToPlace();
-              },
-            ),
+            showSearch
+                ? FloatingActionButton(
+                    heroTag: "FAB_SEARCH_PLACE",
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.search,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      _goToPlace();
+                    },
+                  )
+                : Container(),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8),
               child: FloatingActionButton(
@@ -458,7 +462,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                       markers: _getMarkers(),
                       polygons: _getPolygons(),
                     ),
-                    if (!drawing) _mapButtons(),
+                    if (!drawing) _mapButtons(widget.enableSearch),
                     if (drawing)
                       Draw(
                         onDrawEnd: _onDrawPolygon,
