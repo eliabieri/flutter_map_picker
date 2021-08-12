@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:geocoder/geocoder.dart';
-import 'package:geocoder/model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -114,14 +112,6 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
     if (locationData != null) myLocation = LatLng(locationData.latitude, locationData.longitude);
 
     return locationData;
-  }
-
-  Future<Address> _reverseGeocoding(double lat, double lng) async {
-    final coordinates = new Coordinates(lat, lng);
-    var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    var first = addresses.first;
-    print("${first.featureName} : ${first.addressLine}");
-    return first;
   }
 
   @override
@@ -253,13 +243,6 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                         movingCamera = false;
                         loadingAddress = true;
                       });
-
-                      var address =
-                          (await _reverseGeocoding(centerCamera.latitude, centerCamera.longitude))
-                              .addressLine;
-                      loadingAddress = false;
-
-                      _setSelectedAddress(centerCamera, address);
                     }
                   },
                 ),

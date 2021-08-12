@@ -37,7 +37,6 @@ class AreaPickerScreen extends StatefulWidget {
   final bool enableFreeDraw;
 
   final String placeAutoCompleteLanguage; //es || en
-  final bool enableSearch;
   final MapPickerStrings mapStrings;
 
   AreaPickerScreen(
@@ -52,8 +51,7 @@ class AreaPickerScreen extends StatefulWidget {
       this.initialPolygon = const [],
       this.enableFreeDraw = true,
       this.mapStrings,
-      this.placeAutoCompleteLanguage,
-      this.enableSearch = true})
+      this.placeAutoCompleteLanguage})
       : super(key: key);
 
   @override
@@ -337,32 +335,6 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
       });
     }
 
-    ///GO TO
-    _goToPlace() async {
-      await _getLocation();
-
-      Prediction p = await PlacesAutocomplete.show(
-          context: context,
-          apiKey: googlePlacesApiKey,
-          mode: Mode.fullscreen,
-          language: placeAutoCompleteLanguage,
-          location: myLocation != null
-              ? Location(lat: myLocation.latitude, lng: myLocation.longitude)
-              : null);
-
-      if (p != null) {
-        PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
-        final lat = detail.result.geometry.location.lat;
-        final lng = detail.result.geometry.location.lng;
-
-        double zoom = zoomSteps[distanceSteps.indexOf(radiusInMeters)];
-        CameraPosition newPosition = CameraPosition(target: LatLng(lat, lng), zoom: zoom);
-
-        googleMapController.animateCamera(CameraUpdate.newCameraPosition(newPosition));
-        _selectCenterCircle(LatLng(lat, lng));
-      }
-    }
-
     _goToMyLocation() async {
       await _getLocation();
       if (myLocation != null) {
@@ -372,37 +344,21 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
     }
 
     ///WIDGETS
-    Widget _mapButtons(bool showSearch) {
+    Widget _mapButtons() {
       return Padding(
         padding: EdgeInsets.only(top: 40, left: 8, right: 8),
         child: Column(
           children: <Widget>[
-            showSearch
-                ? FloatingActionButton(
-                    heroTag: "FAB_SEARCH_PLACE",
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.search,
-                      color: Colors.black,
-                    ),
-                    onPressed: () {
-                      _goToPlace();
-                    },
-                  )
-                : Container(),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: FloatingActionButton(
-                heroTag: "FAB_LOCATION",
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.my_location,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  _goToMyLocation();
-                },
+            FloatingActionButton(
+              heroTag: "FAB_LOCATION",
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.my_location,
+                color: Colors.black,
               ),
+              onPressed: () {
+                _goToMyLocation();
+              },
             ),
             if (enableFreeDraw)
               FloatingActionButton(
@@ -462,7 +418,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                       markers: _getMarkers(),
                       polygons: _getPolygons(),
                     ),
-                    if (!drawing) _mapButtons(widget.enableSearch),
+                    if (!drawing) _mapButtons(),
                     if (drawing)
                       Draw(
                         onDrawEnd: _onDrawPolygon,
