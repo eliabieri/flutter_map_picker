@@ -284,18 +284,15 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                       Container(
                         width: 160,
                         padding: EdgeInsets.only(right: 16),
-                        child: FlatButton(
+                        child: ElevatedButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
                           child: Text(strings.cancel),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: mainColor)),
                         ),
                       ),
                       Expanded(
-                        child: FlatButton(
+                        child: ElevatedButton(
                           onPressed: !movingCamera && !loadingAddress && selectedAddress != null
                               ? () {
                                   PlacePickerResult result =
@@ -309,11 +306,6 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
                             strings.selectAddress,
                             style: TextStyle(color: Colors.white),
                           ),
-                          color: mainColor,
-                          disabledColor: Colors.grey[350],
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: mainColor)),
                         ),
                       ),
                     ],

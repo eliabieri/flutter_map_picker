@@ -316,7 +316,7 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
           ),
           child: ListTile(
             title: Text(strings.customArea),
-            trailing: FlatButton(
+            trailing: ElevatedButton(
               child: Text(strings.delete),
               onPressed: () {
                 _removeCustomArea();
@@ -438,20 +438,17 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                           Container(
                             width: 160,
                             padding: EdgeInsets.only(right: 16),
-                            child: FlatButton(
+                            child: ElevatedButton(
                               onPressed: !drawing
                                   ? () {
                                       Navigator.pop(context);
                                     }
                                   : null,
                               child: Text(strings.cancel),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: BorderSide(color: !drawing ? mainColor : Colors.white)),
                             ),
                           ),
                           Expanded(
-                            child: FlatButton(
+                            child: ElevatedButton(
                               onPressed: !drawing
                                   ? () {
                                       AreaPickerResult result = AreaPickerResult(
@@ -464,11 +461,6 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
                                 strings.saveArea,
                                 style: TextStyle(color: Colors.white),
                               ),
-                              color: mainColor,
-                              disabledColor: Colors.grey[350],
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: BorderSide(color: !drawing ? mainColor : Colors.white)),
                             ),
                           ),
                         ],
