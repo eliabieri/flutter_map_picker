@@ -76,11 +76,11 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Center(
           child: Column(
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 onPressed: pickArea,
                 child: Text("Pick area"),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: pickPlace,
                 child: Text("Pick place"),
               ),

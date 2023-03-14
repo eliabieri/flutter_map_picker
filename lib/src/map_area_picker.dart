@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_utils/utils/poly_utils.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart' as $;
 
 import 'map_picker_strings.dart';
 
@@ -136,10 +136,11 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
         .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: latLng, zoom: zoom)));
   }
 
-  Future<$.LocationData> _getLocation() async {
-    $.LocationData locationData;
+  Future<Position> _getLocation() async {
+    Position locationData;
     try {
-      locationData = await $.getLocation();
+      await Geolocator.requestPermission();
+      locationData = await Geolocator.getCurrentPosition();
     } catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         print('Permission denied');

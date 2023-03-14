@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart' as $;
 
 import 'map_picker_strings.dart';
 
@@ -97,10 +97,11 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
         .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: latLng, zoom: zoom)));
   }
 
-  Future<$.LocationData> _getLocation() async {
-    $.LocationData locationData;
+  Future<Position> _getLocation() async {
+    Position locationData;
     try {
-      locationData = await $.getLocation();
+      await Geolocator.requestPermission();
+      locationData = await Geolocator.getCurrentPosition();
     } catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         print('Permission denied');
