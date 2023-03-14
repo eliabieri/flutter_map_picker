@@ -137,10 +137,9 @@ class _AreaPickerScreenState extends State<AreaPickerScreen> {
   }
 
   Future<$.LocationData> _getLocation() async {
-    var location = new $.Location();
     $.LocationData locationData;
     try {
-      locationData = await location.getLocation();
+      locationData = await $.getLocation();
     } catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         print('Permission denied');

@@ -98,10 +98,9 @@ class PlacePickerScreenState extends State<PlacePickerScreen> {
   }
 
   Future<$.LocationData> _getLocation() async {
-    var location = new $.Location();
     $.LocationData locationData;
     try {
-      locationData = await location.getLocation();
+      locationData = await $.getLocation();
     } catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         print('Permission denied');
