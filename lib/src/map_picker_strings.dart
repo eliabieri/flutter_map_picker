@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class MapPickerStrings {
   String selectAddress, saveArea, cancel, delete;
@@ -9,15 +8,15 @@ class MapPickerStrings {
       firstMessageSelectAddress;
 
   MapPickerStrings(
-      {@required this.selectAddress,
-      @required this.saveArea,
-      @required this.cancel,
-      @required this.delete,
-      @required this.distanceInKmFromYou,
-      @required this.drawAreaOnMap,
-      @required this.customArea,
-      @required this.address,
-      @required this.firstMessageSelectAddress});
+      {required this.selectAddress,
+      required this.saveArea,
+      required this.cancel,
+      required this.delete,
+      required this.distanceInKmFromYou,
+      required this.drawAreaOnMap,
+      required this.customArea,
+      required this.address,
+      required this.firstMessageSelectAddress});
 
   factory MapPickerStrings.spanish(
       {selectAddress = "Seleccionar dirección",
